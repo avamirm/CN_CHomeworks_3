@@ -85,5 +85,84 @@ void Network::show()
     }
 }
 
+void Network::printDVRPres(int src, map<int, int> dist, map<int, int> nextHopFromSrc)
+{
+    int prev_p;
+    cout << "Dest | NextHop | Dist | Shortest-Path" << endl;
+    cout << "---------------------------------------------------------" << endl;
+    for (auto node: nodes)
+    {
+        if (node == src)
+        {
+            cout << node << " | " << src << " | " << dist[node] << " | " << "[" + to_string(src) + "]" << endl;
+            continue;
+        }
+        string shortestPath = "";
+        int p = node;
+        while (nextHopFromSrc[p] != -1)
+        {
+            shortestPath=" -> "+to_string(p) + shortestPath;
+            prev_p = p;
+            p = nextHopFromSrc[p];
+        }
+        if (dist[node] == INF)
+            cout << node << " | " << '-' << " | " << "INF" << " | " << "[ ]" << endl;
+        else
+            cout << node << " | " << prev_p << " | " <<dist[node] << " | " << "[" + to_string(src) << shortestPath + "]" << endl;
+    }
+}
 
+void Network::DVRP(int src)
+{
+    if (!nodes.size())
+        throw (NO_TOPOLOGY_CODE);
 
+    map<int, int> dist;
+    map<int, int> nextHopFromSrc;
+    map <int, bool> isMarked;
+    for (auto node: nodes)
+    {
+        dist[node] = INF;
+        nextHopFromSrc[node] = -1;
+        isMarked[node] = false;
+    }
+    set <pair<int, int>> unvisited;
+    dist[src] = 0;
+    unvisited.insert(make_pair(dist[src], src));
+    while (!unvisited.empty())
+    {
+        int v = unvisited.begin()->second;
+        unvisited.erase(unvisited.begin());
+        isMarked[v] = true;
+        for (auto u: nodes)
+        {
+            auto edge = weights.find(make_pair(v, u));
+            int w;
+            if(u == v)
+                w = 0;
+            else if (edge == weights.end())
+                w = -1;
+            else
+                w = edge->second;
+            if (w == -1)
+                continue;
+            if (dist[v] + w < dist[u])
+            {
+                unvisited.erase(make_pair(dist[u], u));
+                dist[u] = dist[v] + w;
+                nextHopFromSrc[u] = v;
+                unvisited.insert(make_pair(dist[u], u));
+            }
+        }
+    }
+    printDVRPres(src, dist, nextHopFromSrc);
+}
+
+void Network::allDVRP()
+{
+    for (auto node: nodes)
+    {
+        cout << "\nDVRP with source: " << node << endl;
+        DVRP(node);
+    }
+}

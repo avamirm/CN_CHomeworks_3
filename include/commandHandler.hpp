@@ -7,6 +7,8 @@ const char COMMAND_DELIM = ' ';
 const string DETERMINE_TOPOLOGY = "topology";
 const string SHOW_TOPOLOGY = "show";
 const string SUCCESS = "OK";
+const string DVRP = "dvrp";
+const string LSRP = "lsrp";
 
 class CommandHandler
 {

@@ -9,6 +9,7 @@
 
 const char EDGE_DELIM = ' ';
 const char NODE_DELIM = '-';
+const int INF = 2147483647;
 
 using namespace std;
 
@@ -19,15 +20,12 @@ public:
     void addEdge(string networkTopology);
     void show();
     int countDigit(int num);
-    // void show();
-    // void delete_edge(int v, int u);
-    // void modify_edge(int v, int u, int cost);
-    // Network(string topology);
-    // void link_state(int source);
-    // void distance_vector(int source);
+    void DVRP(int src);
+    void allDVRP();
 private:
     set<int> nodes;
     map<pair<int, int>, int> weights;
+    void printDVRPres(int src, map<int, int> dist, map<int, int> nextHopFromSrc);
 };
 
 #endif

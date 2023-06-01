@@ -15,14 +15,13 @@ void CommandHandler::run()
 
     string command, cmdArgs;
     stringstream commandStream;
-    // vector<string> arg_list;
 
     while(getline(cin,command))
     {
+        cmdArgs = "";
         commandStream=stringstream(command);
         getline(commandStream, command, COMMAND_DELIM);
         getline(commandStream, cmdArgs);
-
         try
         {
             if (command == DETERMINE_TOPOLOGY)
@@ -30,9 +29,19 @@ void CommandHandler::run()
                 network.addEdge(cmdArgs);
                 cout << SUCCESS << endl;
             }
-            if (command == SHOW_TOPOLOGY)
+            else if (command == SHOW_TOPOLOGY)
             {
                 network.show();
+            }
+            else if (command == DVRP)
+            {
+                if (!cmdArgs.size())
+                    network.allDVRP();
+                else
+                {
+                    int src = stoi(cmdArgs);
+                    network.DVRP(src);
+                }
             }
         }
         catch (int errCode)
@@ -48,10 +57,5 @@ void CommandHandler::run()
                 break;
             }
         }
-        // catch(const std::exception& e)
-        // {
-        //     std::cerr << e.what() << '\n';
-        // }
-        // network.show();
     }
 }
