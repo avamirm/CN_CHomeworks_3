@@ -17,7 +17,6 @@ class CommandHandler
 public:
     CommandHandler();
     vector <string> tokenizeWithDelim(string cmdArgs);
-    // void handleCommand(std::string command);
     void run();
 private:
     Network network;

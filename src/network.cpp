@@ -39,35 +39,24 @@ void Network::addEdge(std::string networkTopology)
     }
 }
 
-int Network::countDigit(int number)
-{
-   int count = 0;
-   while(number != 0)
-   {
-      number = number / 10;
-      count++;
-   }
-   return count;
-}
-
 void Network::show()
 {
     if (!nodes.size())
         throw (NO_TOPOLOGY_CODE);
-    cout << "  |" ;
+    std::cout << "  |" ;
     for (auto node: nodes)
     {
-        cout << " " << node;
+        std::cout << " " << node;
     }
-    cout << endl;
+    std::cout << std::endl;
 
     for (int i = 0; i < (nodes.size() + 1) * 5; i++)
-        cout << "-";
-    cout << endl;
+        std::cout << "-";
+    std::cout << endl;
 
     for (auto v: nodes)
     {
-        cout << " " << v << "|";
+        std::cout << " " << v << "|";
         for (auto u: nodes)
         {
             auto edge = weights.find(make_pair(v, u));
@@ -78,36 +67,36 @@ void Network::show()
                 w = -1;
             else
                 w = edge->second;
-            cout << " "<< w ;
+            std::cout << " "<< w ;
         }
-        cout << endl;
+        std::cout << endl;
     }
 }
 
-void Network::printDVRPres(int src, map<int, int> dist, map<int, int> nextHopFromSrc)
+void Network::printDVRPres(int src, map<int, int> dist, map<int, int> prevHop)
 {
-    int prev_p;
-    cout << "Dest | NextHop | Dist | Shortest-Path" << endl;
-    cout << "---------------------------------------------------------" << endl;
+    int prev;
+    std::cout << "Dest | NextHop | Dist | Shortest-Path" << endl;
+    std::cout << "---------------------------------------------------------" << std::endl;
     for (auto node: nodes)
     {
         if (node == src)
         {
-            cout << node << " | " << src << " | " << dist[node] << " | " << "[" + to_string(src) + "]" << endl;
+            std::cout << node << " | " << src << " | " << dist[node] << " | " << "[" + to_string(src) + "]" << std::endl;
             continue;
         }
-        string shortestPath = "";
+        std::string shortestPath = "";
         int p = node;
-        while (nextHopFromSrc[p] != -1)
+        while (prevHop[p] != -1)
         {
             shortestPath=" -> "+to_string(p) + shortestPath;
-            prev_p = p;
-            p = nextHopFromSrc[p];
+            prev = p;
+            p = prevHop[p];
         }
         if (dist[node] == INF)
-            cout << node << " | " << '-' << " | " << "INF" << " | " << "[ ]" << endl;
+            std::cout << node << " | " << '-' << " | " << "INF" << " | " << "[ ]" << std::endl;
         else
-            cout << node << " | " << prev_p << " | " <<dist[node] << " | " << "[" + to_string(src) << shortestPath + "]" << endl;
+            std::cout << node << " | " << prev << " | " <<dist[node] << " | " << "[" + to_string(src) << shortestPath + "]" << std::endl;
     }
 }
 
@@ -117,11 +106,11 @@ void Network::DVRP(int src)
         throw (NO_TOPOLOGY_CODE);
 
     map<int, int> dist;
-    map<int, int> nextHopFromSrc;
+    map<int, int> prevHop;
     for (auto node: nodes)
     {
         dist[node] = INF;
-        nextHopFromSrc[node] = -1;
+        prevHop[node] = -1;
     }
     dist[src] = 0;
 
@@ -135,7 +124,7 @@ void Network::DVRP(int src)
             if (dist[v] != INF && dist[v] + w < dist[u])
             {
                 dist[u] = dist[v] + w;
-                nextHopFromSrc[u] = v;
+                prevHop[u] = v;
             }
         }
     }
@@ -151,7 +140,7 @@ void Network::DVRP(int src)
         }
     }
 
-    printDVRPres(src, dist, nextHopFromSrc);
+    printDVRPres(src, dist, prevHop);
 }
 
 void Network::allSrcDVRP()
@@ -208,7 +197,7 @@ void Network::printLsrpIterationDists(const vector<vector<int>> &itersInfo)
     }
 }
 
-void Network::printLsrpPaths(const int src, map<int, int> &dist, map<int, int> &nextHop)
+void Network::printLsrpPaths(const int src, map<int, int> &dist, map<int, int> &prevHop)
 {
     string shortestPath;
     int prev;
@@ -220,11 +209,11 @@ void Network::printLsrpPaths(const int src, map<int, int> &dist, map<int, int> &
 
         string shortestPath = "";
         int p = node;
-        while (nextHop[p] != -1)
+        while (prevHop[p] != -1)
         {
             shortestPath = "->" +to_string(p) + shortestPath;
             prev = p;
-            p = nextHop[p];
+            p = prevHop[p];
         }
         if (dist[node] == INF)
             cout << src << "->" << node << " | " << "INF" << " | " << "-" << endl;
@@ -240,7 +229,7 @@ void Network::LSRP(int src)
 
     map<int, int> dist;
     map<int, bool> isMarked;
-    map<int, int> nextHop;
+    map<int, int> prevHop;
 
     for (auto node: nodes)
     {
@@ -249,11 +238,11 @@ void Network::LSRP(int src)
         if (weights.find(edge) != weights.end())
         {
             dist[node] = weights[edge];
-            nextHop[node] = src;
+            prevHop[node] = src;
             continue;
         }
         dist[node] = INF;
-        nextHop[node] = -1;
+        prevHop[node] = -1;
     }
 
     isMarked[src] = true;
@@ -278,13 +267,13 @@ void Network::LSRP(int src)
                 if (dist[minDistNode] + w < dist[node])
                 {
                     dist[node] = dist[minDistNode] + w;
-                    nextHop[node] = minDistNode;
+                    prevHop[node] = minDistNode;
                 }
             }
         }
     }
     printLsrpIterationDists(itersInfo);
-    printLsrpPaths(src, dist, nextHop);
+    printLsrpPaths(src, dist, prevHop);
 }
 
 void Network::removeEdge(int v, int u)

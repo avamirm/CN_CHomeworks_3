@@ -78,24 +78,25 @@ void CommandHandler::run()
         }
         catch (int errCode)
         {
-            switch (errCode) {
-            case NO_TOPOLOGY_CODE:
-                std::cout << NO_TOPOLOGY << std::endl;
-                break;
-            case SELF_LOOP_CODE:
-                std::cout << SELF_LOOP << std::endl;
-                break;
-            case NEGATIVE_LOOP_CODE:
-                std::cout << NEGATIVE_LOOP << std::endl;
-                break;
-            case NODE_NOT_EXIST_CODE:
-                std::cout << NODE_NOT_EXIST << std::endl;
-                break;
-            case EDGE_NOT_EXIST_CODE:
-                std::cout << EDGE_NOT_EXIST << std::endl;
-                break;
-            default:
-                break;
+            switch (errCode) 
+            {
+                case NO_TOPOLOGY_CODE:
+                    std::cout << NO_TOPOLOGY << std::endl;
+                    break;
+                case SELF_LOOP_CODE:
+                    std::cout << SELF_LOOP << std::endl;
+                    break;
+                case NEGATIVE_LOOP_CODE:
+                    std::cout << NEGATIVE_LOOP << std::endl;
+                    break;
+                case NODE_NOT_EXIST_CODE:
+                    std::cout << NODE_NOT_EXIST << std::endl;
+                    break;
+                case EDGE_NOT_EXIST_CODE:
+                    std::cout << EDGE_NOT_EXIST << std::endl;
+                    break;
+                default:
+                    break;
             }
         }
     }
