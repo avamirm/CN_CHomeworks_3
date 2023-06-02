@@ -9,11 +9,14 @@ const string SHOW_TOPOLOGY = "show";
 const string SUCCESS = "OK";
 const string DVRP = "dvrp";
 const string LSRP = "lsrp";
+const string REMOVE = "remove";
+const string MODIFY = "modify";
 
 class CommandHandler
 {
 public:
     CommandHandler();
+    vector <string> tokenizeWithDelim(string cmdArgs);
     // void handleCommand(std::string command);
     void run();
 private:
