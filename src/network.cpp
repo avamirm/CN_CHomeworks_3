@@ -57,10 +57,10 @@ void Network::show()
 {
     if (!nodes.size())
         throw(NO_TOPOLOGY_CODE);
-    std::cout << "  |";
+    std::cout << setw(4) << "|";
     for (auto node : nodes)
     {
-        std::cout << " " << node;
+        std::cout << std::right << setw(5) << node;
     }
     std::cout << std::endl;
 
@@ -70,7 +70,7 @@ void Network::show()
 
     for (auto v : nodes)
     {
-        std::cout << " " << v << "|";
+        std::cout << std::left << setw(3) << v << "|";
         for (auto u : nodes)
         {
             auto edge = weights.find(make_pair(v, u));
@@ -81,7 +81,7 @@ void Network::show()
                 w = -1;
             else
                 w = edge->second;
-            std::cout << " " << w;
+            std::cout << " " << std::right << setw(4) << w;
         }
         std::cout << endl;
     }
@@ -97,7 +97,7 @@ void Network::printDVRPres(int src, map<int, int> dist, map<int, int> prevHop)
 
         if (node == src)
         {
-            std::cout << std::left << setw(5) << node << "|" << setw(9) << src << "|" << setw(6) << dist[node] << "|"
+            std::cout << std::left << setw(5) << node << "| " << setw(8) << src << "| " << setw(5) << dist[node] << "| "
                       << "[" + to_string(src) + "]" << std::endl;
             continue;
         }
@@ -110,12 +110,12 @@ void Network::printDVRPres(int src, map<int, int> dist, map<int, int> prevHop)
             p = prevHop[p];
         }
         if (dist[node] == INF)
-            std::cout << setw(5) << node << "|" << '-' << "|"
+            std::cout << setw(5) << node << "| " << '-' << "| "
                       << "INF"
                       << " | "
                       << "[ ]" << std::endl;
         else
-            std::cout << setw(5) << node << "|" << setw(9) << prev << "|" << setw(6) << dist[node] << "|"
+            std::cout << setw(5) << node << "| " << setw(8) << prev << "| " << setw(5) << dist[node] << "| "
                       << "[" + to_string(src) << shortestPath + "]" << std::endl;
     }
 }
@@ -162,10 +162,11 @@ void Network::DVRP(int src)
         }
     }
 
-    printDVRPres(src, dist, prevHop);
     auto finish = std::chrono::steady_clock::now();
     double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(finish - start).count();
-    cout << "Elapsed: " << elapsed_seconds * 1000000 << endl;
+    cout << "Elapsed Time: " << elapsed_seconds * 1000000 << endl;
+
+    printDVRPres(src, dist, prevHop);
 }
 
 void Network::allSrcDVRP()
@@ -303,11 +304,12 @@ void Network::LSRP(int src)
         }
     }
 
-    printLsrpIterationDists(itersInfo);
-    printLsrpPaths(src, dist, prevHop);
     auto finish = std::chrono::steady_clock::now();
     double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(finish - start).count();
-    cout << "Elapsed: " << elapsed_seconds * 1000000 << endl;
+    cout << "Elapsed Time: " << elapsed_seconds * 1000000 << endl;
+
+    printLsrpIterationDists(itersInfo);
+    printLsrpPaths(src, dist, prevHop);
 }
 
 void Network::removeEdge(int v, int u)

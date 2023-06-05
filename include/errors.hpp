@@ -8,6 +8,7 @@ const std::string NO_TOPOLOGY = "No topology";
 const std::string NEGATIVE_LOOP = "Graph contains negative loop cycle";
 const std::string NODE_NOT_EXIST = "Node does not exist";
 const std::string EDGE_NOT_EXIST = "Edge does not exist";
+const std::string COMMAND_NOT_EXIST = "Command does not exist";
 
 const int SELF_LOOP_CODE = 101;
 const int NO_TOPOLOGY_CODE = 102;
