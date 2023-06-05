@@ -334,6 +334,20 @@ void Network::removeEdge(int v, int u)
 
 void Network::modifyEdge(int v, int u, int newWeight)
 {
+    bool doesVexist = false;
+    bool doesUexist = false;
+    for (auto node : nodes)
+    {
+        if (node == v)
+            doesVexist = true;
+        if (node == u)
+            doesUexist = true;
+    }
+    if (!doesUexist | !doesVexist)
+        throw(NODE_NOT_EXIST_CODE);
+    auto edge = weights.find(make_pair(v, u));
+    if (edge == weights.end())
+        throw(EDGE_NOT_EXIST_CODE);
     if (v == u)
         throw(SELF_LOOP_CODE);
     weights[make_pair(u, v)] = newWeight;

@@ -457,6 +457,10 @@ void Network::allSrcDVRP()
 
 ## Results
 
+- show
+
+  ![show](/images/Show.png "show")
+
 - lsrp
 
   ![lsrp](/images/LSRP.png "lsrp")
